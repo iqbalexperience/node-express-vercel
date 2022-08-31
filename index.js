@@ -1,14 +1,36 @@
-// Import packages
-const express = require("express");
-const home = require("./routes/home");
-
-// Middlewares
+import { writeFileSync, readFileSync } from 'fs';
+import express from 'express';
 const app = express();
-app.use(express.json());
 
-// Routes
-app.use("/home", home);
+app.all('/*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+  });
 
-// connection
-const port = process.env.PORT || 9001;
-app.listen(port, () => console.log(`Listening to port ${port}`));
+app.get('/', async (req,res)=>{
+  let db = await readDB()
+  res.send(db)
+})
+
+app.get('/user/:username', async (req, res)=>{
+  const userName = req.params.username;
+  let db = await readDB();
+  db.user = userName;
+  console.log(db)
+  writeDB(db);
+  res.send(db);
+})
+
+
+
+function writeDB(data){
+  return writeFileSync('database.json', JSON.stringify(data));
+}
+
+function readDB(){
+  const db = readFileSync('database.json', 'utf8')
+  return JSON.parse(db)
+}
+
+app.listen(3000)
