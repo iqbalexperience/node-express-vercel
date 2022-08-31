@@ -1,6 +1,7 @@
 import { writeFileSync, readFileSync } from 'fs';
 import express from 'express';
 const app = express();
+const dba = require('database.json')
 
 app.all('/*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -25,11 +26,11 @@ app.get('/user/:username', async (req, res)=>{
 
 
 function writeDB(data){
-  return writeFileSync('database.json', JSON.stringify(data));
+  return writeFileSync(dba, JSON.stringify(data));
 }
 
 function readDB(){
-  const db = readFileSync('database.json', 'utf8')
+  const db = readFileSync(dba, 'utf8')
   return JSON.parse(db)
 }
 
