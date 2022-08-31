@@ -1,7 +1,7 @@
 import { writeFileSync, readFileSync } from 'fs';
 import express from 'express';
 const app = express();
-const dba = require('database.json')
+const dba = require('./database.json')
 
 app.all('/*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
